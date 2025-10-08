@@ -1,0 +1,78 @@
+Analyzing data from: axiom_data
+Available timeframes: ['15m', '1d', '1h', '4h', '5m']
+Using timeframe: 1d
+Collecting pairs from CSV files...
+Found 177 pairs to analyze
+Loading SOL base data...
+Base asset data: 1096 rows from 2022-10-07 00:00:00+00:00 to 2025-10-06 00:00:00+00:00
+Starting analysis of 176 pairs against SOL...
+Processed 25/176 pairs...
+Processed 50/176 pairs...
+Processed 75/176 pairs...
+Processed 100/176 pairs...
+Processed 125/176 pairs...
+Processed 150/176 pairs...
+Processed 175/176 pairs...
+
+================================================================================
+ANALYSIS RESULTS
+================================================================================
+
+Valid results for 170 pairs out of 176 total pairs
+
+------------------------------------------------------------
+TOP 10 BY LOWEST SCORE (strongest cointegration)
+------------------------------------------------------------
+ 1. BIO          | Score:    -8.7359 | P-value: 4.115e-13 | n=277
+ 2. ANIME        | Score:    -7.2665 | P-value: 1.965e-09 | n=259
+ 3. MELANIA      | Score:    -6.3509 | P-value: 2.738e-07 | n=260
+ 4. TRUMP        | Score:    -6.0831 | P-value: 1.072e-06 | n=262
+ 5. LINEA        | Score:    -5.1706 | P-value: 7.900e-05 | n=36
+ 6. DOOD         | Score:    -4.8199 | P-value: 3.480e-04 | n=151
+ 7. NIL          | Score:    -4.8079 | P-value: 3.655e-04 | n=197
+ 8. VVV          | Score:    -4.7860 | P-value: 3.995e-04 | n=252
+ 9. NXPC         | Score:    -4.3650 | P-value: 2.023e-03 | n=145
+10. SOPH         | Score:    -4.2257 | P-value: 3.334e-03 | n=132
+
+------------------------------------------------------------
+TOP 10 BY LOWEST P-VALUE (most significant)
+------------------------------------------------------------
+ 1. BIO          | P-value: 4.115e-13 | Score:    -8.7359 | n=277
+ 2. ANIME        | P-value: 1.965e-09 | Score:    -7.2665 | n=259
+ 3. MELANIA      | P-value: 2.738e-07 | Score:    -6.3509 | n=260
+ 4. TRUMP        | P-value: 1.072e-06 | Score:    -6.0831 | n=262
+ 5. LINEA        | P-value: 7.900e-05 | Score:    -5.1706 | n=36
+ 6. DOOD         | P-value: 3.480e-04 | Score:    -4.8199 | n=151
+ 7. NIL          | P-value: 3.655e-04 | Score:    -4.8079 | n=197
+ 8. VVV          | P-value: 3.995e-04 | Score:    -4.7860 | n=252
+ 9. NXPC         | P-value: 2.023e-03 | Score:    -4.3650 | n=145
+10. SOPH         | P-value: 3.334e-03 | Score:    -4.2257 | n=132
+
+------------------------------------------------------------
+IN BOTH TOP 10 LISTS
+------------------------------------------------------------
+ANIME        | Score:    -7.2665 | P-value: 1.965e-09 | n=259
+BIO          | Score:    -8.7359 | P-value: 4.115e-13 | n=277
+DOOD         | Score:    -4.8199 | P-value: 3.480e-04 | n=151
+LINEA        | Score:    -5.1706 | P-value: 7.900e-05 | n=36
+MELANIA      | Score:    -6.3509 | P-value: 2.738e-07 | n=260
+NIL          | Score:    -4.8079 | P-value: 3.655e-04 | n=197
+NXPC         | Score:    -4.3650 | P-value: 2.023e-03 | n=145
+SOPH         | Score:    -4.2257 | P-value: 3.334e-03 | n=132
+TRUMP        | Score:    -6.0831 | P-value: 1.072e-06 | n=262
+VVV          | Score:    -4.7860 | P-value: 3.995e-04 | n=252
+
+------------------------------------------------------------
+BEST INDIVIDUAL RESULTS
+------------------------------------------------------------
+Lowest Score:  BIO (Score: -8.735911, n=277)
+Lowest P-val:  BIO (P-value: 4.115e-13, n=277)
+
+Pairs with statistically significant cointegration (p < 0.05): 27
+  BIO          | P-value: 4.115e-13 | Score:    -8.7359 | n=277
+  ANIME        | P-value: 1.965e-09 | Score:    -7.2665 | n=259
+  MELANIA      | P-value: 2.738e-07 | Score:    -6.3509 | n=260
+  TRUMP        | P-value: 1.072e-06 | Score:    -6.0831 | n=262
+  LINEA        | P-value: 7.900e-05 | Score:    -5.1706 | n=36
+
+================================================================================

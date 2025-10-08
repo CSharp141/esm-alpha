@@ -1,0 +1,71 @@
+Analyzing data from: axiom_data
+Available timeframes: ['15m', '1d', '1h', '4h', '5m']
+Using timeframe: 4h
+Collecting pairs from CSV files...
+Found 177 pairs to analyze
+Loading SOL base data...
+Base asset data: 4381 rows from 2023-10-07 20:00:00+00:00 to 2025-10-06 20:00:00+00:00
+Starting analysis of 176 pairs against SOL...
+
+================================================================================
+ANALYSIS RESULTS
+================================================================================
+
+Valid results for 170 pairs out of 176 total pairs
+
+------------------------------------------------------------
+TOP 10 BY LOWEST SCORE (strongest cointegration)
+------------------------------------------------------------
+ 1. YZY          | Score:   -10.9425 | P-value: 1.147e-18 | n=282
+ 2. ZEREBRO      | Score:    -8.3704 | P-value: 3.507e-12 | n=1665
+ 3. VINE         | Score:    -6.8612 | P-value: 1.829e-08 | n=1539
+ 4. BIO          | Score:    -6.6791 | P-value: 4.875e-08 | n=1659
+ 5. ZK           | Score:    -5.3447 | P-value: 3.644e-05 | n=2890
+ 6. AI16Z        | Score:    -4.9399 | P-value: 2.120e-04 | n=1673
+ 7. LINEA        | Score:    -4.7259 | P-value: 5.085e-04 | n=214
+ 8. TST          | Score:    -4.4939 | P-value: 1.253e-03 | n=1438
+ 9. RESOLV       | Score:    -4.4518 | P-value: 1.468e-03 | n=711
+10. REZ          | Score:    -4.1995 | P-value: 3.655e-03 | n=3147
+
+------------------------------------------------------------
+TOP 10 BY LOWEST P-VALUE (most significant)
+------------------------------------------------------------
+ 1. YZY          | P-value: 1.147e-18 | Score:   -10.9425 | n=282
+ 2. ZEREBRO      | P-value: 3.507e-12 | Score:    -8.3704 | n=1665
+ 3. VINE         | P-value: 1.829e-08 | Score:    -6.8612 | n=1539
+ 4. BIO          | P-value: 4.875e-08 | Score:    -6.6791 | n=1659
+ 5. ZK           | P-value: 3.644e-05 | Score:    -5.3447 | n=2890
+ 6. AI16Z        | P-value: 2.120e-04 | Score:    -4.9399 | n=1673
+ 7. LINEA        | P-value: 5.085e-04 | Score:    -4.7259 | n=214
+ 8. TST          | P-value: 1.253e-03 | Score:    -4.4939 | n=1438
+ 9. RESOLV       | P-value: 1.468e-03 | Score:    -4.4518 | n=711
+10. REZ          | P-value: 3.655e-03 | Score:    -4.1995 | n=3147
+
+------------------------------------------------------------
+IN BOTH TOP 10 LISTS
+------------------------------------------------------------
+AI16Z        | Score:    -4.9399 | P-value: 2.120e-04 | n=1673
+BIO          | Score:    -6.6791 | P-value: 4.875e-08 | n=1659
+LINEA        | Score:    -4.7259 | P-value: 5.085e-04 | n=214
+RESOLV       | Score:    -4.4518 | P-value: 1.468e-03 | n=711
+REZ          | Score:    -4.1995 | P-value: 3.655e-03 | n=3147
+TST          | Score:    -4.4939 | P-value: 1.253e-03 | n=1438
+VINE         | Score:    -6.8612 | P-value: 1.829e-08 | n=1539
+YZY          | Score:   -10.9425 | P-value: 1.147e-18 | n=282
+ZEREBRO      | Score:    -8.3704 | P-value: 3.507e-12 | n=1665
+ZK           | Score:    -5.3447 | P-value: 3.644e-05 | n=2890
+
+------------------------------------------------------------
+BEST INDIVIDUAL RESULTS
+------------------------------------------------------------
+Lowest Score:  YZY (Score: -10.942548, n=282)
+Lowest P-val:  YZY (P-value: 1.147e-18, n=282)
+
+Pairs with statistically significant cointegration (p < 0.05): 32
+  YZY          | P-value: 1.147e-18 | Score:   -10.9425 | n=282
+  ZEREBRO      | P-value: 3.507e-12 | Score:    -8.3704 | n=1665
+  VINE         | P-value: 1.829e-08 | Score:    -6.8612 | n=1539
+  BIO          | P-value: 4.875e-08 | Score:    -6.6791 | n=1659
+  ZK           | P-value: 3.644e-05 | Score:    -5.3447 | n=2890
+
+================================================================================

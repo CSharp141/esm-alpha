@@ -1,0 +1,71 @@
+Analyzing data from: axiom_data
+Available timeframes: ['15m', '1d', '1h', '4h', '5m']
+Using timeframe: 5m
+Collecting pairs from CSV files...
+Found 177 pairs to analyze
+Loading SOL base data...
+Base asset data: 5034 rows from 2025-09-19 08:10:00+00:00 to 2025-10-06 19:35:00+00:00
+Starting analysis of 176 pairs against SOL...
+
+================================================================================
+ANALYSIS RESULTS
+================================================================================
+
+Valid results for 170 pairs out of 176 total pairs
+
+------------------------------------------------------------
+TOP 10 BY LOWEST SCORE (strongest cointegration)
+------------------------------------------------------------
+ 1. SUPER        | Score:    -4.6786 | P-value: 6.137e-04 | n=5034
+ 2. FARTCOIN     | Score:    -4.6684 | P-value: 6.390e-04 | n=5002
+ 3. MORPHO       | Score:    -4.4648 | P-value: 1.398e-03 | n=5034
+ 4. COMP         | Score:    -4.1192 | P-value: 4.819e-03 | n=5021
+ 5. TRX          | Score:    -4.0298 | P-value: 6.508e-03 | n=5017
+ 6. LINK         | Score:    -3.8956 | P-value: 1.006e-02 | n=5027
+ 7. FIL          | Score:    -3.8771 | P-value: 1.066e-02 | n=5034
+ 8. SKY          | Score:    -3.8208 | P-value: 1.271e-02 | n=5034
+ 9. FTT          | Score:    -3.8013 | P-value: 1.350e-02 | n=5009
+10. SUI          | Score:    -3.5868 | P-value: 2.544e-02 | n=5029
+
+------------------------------------------------------------
+TOP 10 BY LOWEST P-VALUE (most significant)
+------------------------------------------------------------
+ 1. SUPER        | P-value: 6.137e-04 | Score:    -4.6786 | n=5034
+ 2. FARTCOIN     | P-value: 6.390e-04 | Score:    -4.6684 | n=5002
+ 3. MORPHO       | P-value: 1.398e-03 | Score:    -4.4648 | n=5034
+ 4. COMP         | P-value: 4.819e-03 | Score:    -4.1192 | n=5021
+ 5. TRX          | P-value: 6.508e-03 | Score:    -4.0298 | n=5017
+ 6. LINK         | P-value: 1.006e-02 | Score:    -3.8956 | n=5027
+ 7. FIL          | P-value: 1.066e-02 | Score:    -3.8771 | n=5034
+ 8. SKY          | P-value: 1.271e-02 | Score:    -3.8208 | n=5034
+ 9. FTT          | P-value: 1.350e-02 | Score:    -3.8013 | n=5009
+10. SUI          | P-value: 2.544e-02 | Score:    -3.5868 | n=5029
+
+------------------------------------------------------------
+IN BOTH TOP 10 LISTS
+------------------------------------------------------------
+COMP         | Score:    -4.1192 | P-value: 4.819e-03 | n=5021
+FARTCOIN     | Score:    -4.6684 | P-value: 6.390e-04 | n=5002
+FIL          | Score:    -3.8771 | P-value: 1.066e-02 | n=5034
+FTT          | Score:    -3.8013 | P-value: 1.350e-02 | n=5009
+LINK         | Score:    -3.8956 | P-value: 1.006e-02 | n=5027
+MORPHO       | Score:    -4.4648 | P-value: 1.398e-03 | n=5034
+SKY          | Score:    -3.8208 | P-value: 1.271e-02 | n=5034
+SUI          | Score:    -3.5868 | P-value: 2.544e-02 | n=5029
+SUPER        | Score:    -4.6786 | P-value: 6.137e-04 | n=5034
+TRX          | Score:    -4.0298 | P-value: 6.508e-03 | n=5017
+
+------------------------------------------------------------
+BEST INDIVIDUAL RESULTS
+------------------------------------------------------------
+Lowest Score:  SUPER (Score: -4.678639, n=5034)
+Lowest P-val:  SUPER (P-value: 6.137e-04, n=5034)
+
+Pairs with statistically significant cointegration (p < 0.05): 17
+  SUPER        | P-value: 6.137e-04 | Score:    -4.6786 | n=5034
+  FARTCOIN     | P-value: 6.390e-04 | Score:    -4.6684 | n=5002
+  MORPHO       | P-value: 1.398e-03 | Score:    -4.4648 | n=5034
+  COMP         | P-value: 4.819e-03 | Score:    -4.1192 | n=5021
+  TRX          | P-value: 6.508e-03 | Score:    -4.0298 | n=5017
+
+================================================================================

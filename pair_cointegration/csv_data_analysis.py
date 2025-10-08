@@ -251,8 +251,6 @@ def main():
         results[pair] = res
         del df
         gc.collect()
-        if i % 25 == 0:  # More frequent updates
-            print(f"Processed {i}/{len(pairs_to_analyze)} pairs...")
 
     display_analysis_results(results)
 

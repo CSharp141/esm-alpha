@@ -1,0 +1,71 @@
+Analyzing data from: axiom_data
+Available timeframes: ['15m', '1d', '1h', '4h', '5m']
+Using timeframe: 15m
+Collecting pairs from CSV files...
+Found 177 pairs to analyze
+Loading SOL base data...
+Base asset data: 5013 rows from 2025-08-15 15:00:00+00:00 to 2025-10-06 20:00:00+00:00
+Starting analysis of 176 pairs against SOL...
+
+================================================================================
+ANALYSIS RESULTS
+================================================================================
+
+Valid results for 170 pairs out of 176 total pairs
+
+------------------------------------------------------------
+TOP 10 BY LOWEST SCORE (strongest cointegration)
+------------------------------------------------------------
+ 1. LINEA        | Score:    -5.5905 | P-value: 1.175e-05 | n=3404
+ 2. YZY          | Score:    -5.1198 | P-value: 9.856e-05 | n=4485
+ 3. WLFI         | Score:    -4.1641 | P-value: 4.131e-03 | n=4263
+ 4. PURR         | Score:    -3.3827 | P-value: 4.431e-02 | n=5005
+ 5. SUPER        | Score:    -3.3760 | P-value: 4.509e-02 | n=5013
+ 6. GMX          | Score:    -3.3753 | P-value: 4.517e-02 | n=5010
+ 7. SKY          | Score:    -3.3501 | P-value: 4.821e-02 | n=2492
+ 8. STBL         | Score:    -3.1646 | P-value: 7.606e-02 | n=1882
+ 9. DOT          | Score:    -3.1287 | P-value: 8.268e-02 | n=5006
+10. ASTER        | Score:    -3.0907 | P-value: 9.019e-02 | n=1671
+
+------------------------------------------------------------
+TOP 10 BY LOWEST P-VALUE (most significant)
+------------------------------------------------------------
+ 1. LINEA        | P-value: 1.175e-05 | Score:    -5.5905 | n=3404
+ 2. YZY          | P-value: 9.856e-05 | Score:    -5.1198 | n=4485
+ 3. WLFI         | P-value: 4.131e-03 | Score:    -4.1641 | n=4263
+ 4. PURR         | P-value: 4.431e-02 | Score:    -3.3827 | n=5005
+ 5. SUPER        | P-value: 4.509e-02 | Score:    -3.3760 | n=5013
+ 6. GMX          | P-value: 4.517e-02 | Score:    -3.3753 | n=5010
+ 7. SKY          | P-value: 4.821e-02 | Score:    -3.3501 | n=2492
+ 8. STBL         | P-value: 7.606e-02 | Score:    -3.1646 | n=1882
+ 9. DOT          | P-value: 8.268e-02 | Score:    -3.1287 | n=5006
+10. ASTER        | P-value: 9.019e-02 | Score:    -3.0907 | n=1671
+
+------------------------------------------------------------
+IN BOTH TOP 10 LISTS
+------------------------------------------------------------
+ASTER        | Score:    -3.0907 | P-value: 9.019e-02 | n=1671
+DOT          | Score:    -3.1287 | P-value: 8.268e-02 | n=5006
+GMX          | Score:    -3.3753 | P-value: 4.517e-02 | n=5010
+LINEA        | Score:    -5.5905 | P-value: 1.175e-05 | n=3404
+PURR         | Score:    -3.3827 | P-value: 4.431e-02 | n=5005
+SKY          | Score:    -3.3501 | P-value: 4.821e-02 | n=2492
+STBL         | Score:    -3.1646 | P-value: 7.606e-02 | n=1882
+SUPER        | Score:    -3.3760 | P-value: 4.509e-02 | n=5013
+WLFI         | Score:    -4.1641 | P-value: 4.131e-03 | n=4263
+YZY          | Score:    -5.1198 | P-value: 9.856e-05 | n=4485
+
+------------------------------------------------------------
+BEST INDIVIDUAL RESULTS
+------------------------------------------------------------
+Lowest Score:  LINEA (Score: -5.590471, n=3404)
+Lowest P-val:  LINEA (P-value: 1.175e-05, n=3404)
+
+Pairs with statistically significant cointegration (p < 0.05): 7
+  LINEA        | P-value: 1.175e-05 | Score:    -5.5905 | n=3404
+  YZY          | P-value: 9.856e-05 | Score:    -5.1198 | n=4485
+  WLFI         | P-value: 4.131e-03 | Score:    -4.1641 | n=4263
+  PURR         | P-value: 4.431e-02 | Score:    -3.3827 | n=5005
+  SUPER        | P-value: 4.509e-02 | Score:    -3.3760 | n=5013
+
+================================================================================

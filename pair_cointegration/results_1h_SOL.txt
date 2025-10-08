@@ -1,0 +1,71 @@
+Analyzing data from: axiom_data
+Available timeframes: ['15m', '1d', '1h', '4h', '5m']
+Using timeframe: 1h
+Collecting pairs from CSV files...
+Found 177 pairs to analyze
+Loading SOL base data...
+Base asset data: 5004 rows from 2025-03-12 09:00:00+00:00 to 2025-10-06 20:00:00+00:00
+Starting analysis of 176 pairs against SOL...
+
+================================================================================
+ANALYSIS RESULTS
+================================================================================
+
+Valid results for 170 pairs out of 176 total pairs
+
+------------------------------------------------------------
+TOP 10 BY LOWEST SCORE (strongest cointegration)
+------------------------------------------------------------
+ 1. NXPC         | Score:    -5.9381 | P-value: 2.206e-06 | n=3469
+ 2. MAVIA        | Score:    -4.5593 | P-value: 9.767e-04 | n=5003
+ 3. LINEA        | Score:    -4.2895 | P-value: 2.658e-03 | n=853
+ 4. GMX          | Score:    -4.0875 | P-value: 5.367e-03 | n=5003
+ 5. PROMPT       | Score:    -4.0621 | P-value: 5.845e-03 | n=4287
+ 6. TNSR         | Score:    -3.9915 | P-value: 7.385e-03 | n=5003
+ 7. SOPH         | Score:    -3.9527 | P-value: 8.377e-03 | n=3152
+ 8. REZ          | Score:    -3.9073 | P-value: 9.692e-03 | n=5003
+ 9. VINE         | Score:    -3.8655 | P-value: 1.106e-02 | n=5000
+10. WLFI         | Score:    -3.8336 | P-value: 1.222e-02 | n=1069
+
+------------------------------------------------------------
+TOP 10 BY LOWEST P-VALUE (most significant)
+------------------------------------------------------------
+ 1. NXPC         | P-value: 2.206e-06 | Score:    -5.9381 | n=3469
+ 2. MAVIA        | P-value: 9.767e-04 | Score:    -4.5593 | n=5003
+ 3. LINEA        | P-value: 2.658e-03 | Score:    -4.2895 | n=853
+ 4. GMX          | P-value: 5.367e-03 | Score:    -4.0875 | n=5003
+ 5. PROMPT       | P-value: 5.845e-03 | Score:    -4.0621 | n=4287
+ 6. TNSR         | P-value: 7.385e-03 | Score:    -3.9915 | n=5003
+ 7. SOPH         | P-value: 8.377e-03 | Score:    -3.9527 | n=3152
+ 8. REZ          | P-value: 9.692e-03 | Score:    -3.9073 | n=5003
+ 9. VINE         | P-value: 1.106e-02 | Score:    -3.8655 | n=5000
+10. WLFI         | P-value: 1.222e-02 | Score:    -3.8336 | n=1069
+
+------------------------------------------------------------
+IN BOTH TOP 10 LISTS
+------------------------------------------------------------
+GMX          | Score:    -4.0875 | P-value: 5.367e-03 | n=5003
+LINEA        | Score:    -4.2895 | P-value: 2.658e-03 | n=853
+MAVIA        | Score:    -4.5593 | P-value: 9.767e-04 | n=5003
+NXPC         | Score:    -5.9381 | P-value: 2.206e-06 | n=3469
+PROMPT       | Score:    -4.0621 | P-value: 5.845e-03 | n=4287
+REZ          | Score:    -3.9073 | P-value: 9.692e-03 | n=5003
+SOPH         | Score:    -3.9527 | P-value: 8.377e-03 | n=3152
+TNSR         | Score:    -3.9915 | P-value: 7.385e-03 | n=5003
+VINE         | Score:    -3.8655 | P-value: 1.106e-02 | n=5000
+WLFI         | Score:    -3.8336 | P-value: 1.222e-02 | n=1069
+
+------------------------------------------------------------
+BEST INDIVIDUAL RESULTS
+------------------------------------------------------------
+Lowest Score:  NXPC (Score: -5.938069, n=3469)
+Lowest P-val:  NXPC (P-value: 2.206e-06, n=3469)
+
+Pairs with statistically significant cointegration (p < 0.05): 25
+  NXPC         | P-value: 2.206e-06 | Score:    -5.9381 | n=3469
+  MAVIA        | P-value: 9.767e-04 | Score:    -4.5593 | n=5003
+  LINEA        | P-value: 2.658e-03 | Score:    -4.2895 | n=853
+  GMX          | P-value: 5.367e-03 | Score:    -4.0875 | n=5003
+  PROMPT       | P-value: 5.845e-03 | Score:    -4.0621 | n=4287
+
+================================================================================
