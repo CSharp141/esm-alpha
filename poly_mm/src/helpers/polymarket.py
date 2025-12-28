@@ -17,7 +17,7 @@ Docs:
     Positions (Data API):           https://docs.polymarket.com/developers/CLOB/endpoints  (data-api)
 """
 
-from typing import Optional, Dict, List, Any, Tuple
+from typing import Optional, Dict, List, Any, Tuple, Union
 from dataclasses import dataclass
 from datetime import datetime, timezone
 import time
@@ -55,7 +55,13 @@ class PolymarketMarket:
     market_id: str                 # condition_id
     question: str
     strike_price: float            # Threshold price to beat
-    expiry_time: float             # Unix timestamp
+    expiry_time: float             # Unix timestamp (market end)
+    
+    # Slug for predictive next market discovery
+    slug: Optional[str] = None
+    
+    # Market start time (for precise strike price capture)
+    start_time: Optional[float] = None  # Unix timestamp (market start)
 
     # Token IDs (ERC-1155) for each outcome
     yes_token_id: Optional[str] = None
@@ -81,6 +87,18 @@ class PolymarketMarket:
         """Calculate minutes remaining to expiry."""
         seconds_remaining = self.expiry_time - time.time()
         return max(0.0, seconds_remaining / 60.0)
+    
+    def seconds_to_start(self) -> float:
+        """Calculate seconds until market start (negative if already started)."""
+        if self.start_time is None:
+            return 0.0
+        return self.start_time - time.time()
+    
+    def has_started(self) -> bool:
+        """Check if market has started."""
+        if self.start_time is None:
+            return True  # Assume started if no start time
+        return time.time() >= self.start_time
 
     def is_expired(self) -> bool:
         """Check if market has expired."""
@@ -252,6 +270,20 @@ class PolymarketClient:
             return f"timestamp {expiry_timestamp}"
 
     @staticmethod
+    def _current_15m_boundary_ts(now_s: Optional[int] = None) -> int:
+        """
+        Calculate the current 15-minute boundary timestamp (market that's live now).
+        
+        Args:
+            now_s: Current timestamp (defaults to now)
+            
+        Returns:
+            Unix timestamp of current 15-minute boundary (rounds down)
+        """
+        now = int(now_s or time.time())
+        return (now // 900) * 900  # 900 = 15*60
+    
+    @staticmethod
     def _next_15m_boundary_ts(now_s: Optional[int] = None) -> int:
         """
         Calculate the next 15-minute boundary timestamp.
@@ -264,6 +296,49 @@ class PolymarketClient:
         """
         now = int(now_s or time.time())
         return ((now // 900) + 1) * 900  # 900 = 15*60
+    
+    @staticmethod
+    def _extract_timestamp_from_slug(slug: str) -> Optional[int]:
+        """
+        Extract timestamp from a market slug.
+        
+        Args:
+            slug: Market slug like 'btc-updown-15m-1762811100'
+            
+        Returns:
+            Unix timestamp (e.g., 1762811100) or None if not found
+        """
+        try:
+            # Slug format: {asset}-updown-15m-{timestamp}
+            parts = slug.split('-')
+            if len(parts) >= 4 and parts[-2] == '15m':
+                return int(parts[-1])
+        except (ValueError, IndexError):
+            pass
+        return None
+    
+    @staticmethod
+    def _predict_next_market_slug(current_slug: str) -> Optional[str]:
+        """
+        Predict the next market slug by incrementing timestamp by 900 seconds.
+        
+        Args:
+            current_slug: Current market slug like 'btc-updown-15m-1762811100'
+            
+        Returns:
+            Next market slug like 'btc-updown-15m-1762812000' or None if parse fails
+        """
+        current_ts = PolymarketClient._extract_timestamp_from_slug(current_slug)
+        if current_ts is None:
+            return None
+        
+        next_ts = current_ts + 900  # Add 15 minutes
+        
+        # Reconstruct slug with new timestamp
+        parts = current_slug.rsplit('-', 1)  # Split from right, once
+        if len(parts) == 2:
+            return f"{parts[0]}-{next_ts}"
+        return None
     
     @staticmethod
     def _split_clob_token_ids(raw: str) -> Tuple[str, str]:
@@ -313,14 +388,9 @@ class PolymarketClient:
                 return None
             
             # Get end date
-            end_iso = m.get("endDateIso") or m.get("endDate") or evt_json.get("endDate")
+            end_iso = m.get("endDate") or evt_json.get("endDate")
             if end_iso:
-                # Parse ISO timestamp to unix
-                if isinstance(end_iso, str):
-                    dt = datetime.fromisoformat(end_iso.replace('Z', '+00:00'))
-                    expiry_time = dt.timestamp()
-                else:
-                    expiry_time = float(end_iso)
+                expiry_time = datetime.fromisoformat(end_iso.replace('Z', '+00:00')).timestamp()
             else:
                 return None
             
@@ -329,6 +399,12 @@ class PolymarketClient:
             
             # Parse token IDs
             yes_id, no_id = self._split_clob_token_ids(m.get("clobTokenIds", ""))
+            
+            # Get slug for predictive next market discovery
+            slug = evt_json.get("slug")
+            
+            # Calculate market start time (15-minute markets: expiry - 900 seconds)
+            start_time = expiry_time - 900  # 900 seconds = 15 minutes
             
             # For Up/Down markets, the strike is the Chainlink price at market open.
             # API doesn't provide this, so we'll need to set it later from current spot.
@@ -340,12 +416,19 @@ class PolymarketClient:
                 question=question,
                 strike_price=strike_price,
                 expiry_time=expiry_time,
+                start_time=start_time,
+                slug=slug,
                 yes_token_id=yes_id,
                 no_token_id=no_id,
             )
             
             # Fetch order book data
+            start_time = time.time()
             self._update_market_book(market)
+
+            end_time = time.time()
+            elapsed = end_time - start_time
+            print(f"  ⏱️  Book query took {elapsed:.2f} seconds")
             
             return market
             
@@ -369,12 +452,12 @@ class PolymarketClient:
             ).json()
             
             if yes_book.get("bids"):
-                market.yes_bid = float(yes_book["bids"][0]["price"])
-                market.yes_bid_size = float(yes_book["bids"][0]["size"])
+                market.yes_bid = float(yes_book["bids"][-1]["price"])
+                market.yes_bid_size = float(yes_book["bids"][-1]["size"])
             if yes_book.get("asks"):
-                market.yes_ask = float(yes_book["asks"][0]["price"])
-                market.yes_ask_size = float(yes_book["asks"][0]["size"])
-            
+                market.yes_ask = float(yes_book["asks"][-1]["price"])
+                market.yes_ask_size = float(yes_book["asks"][-1]["size"])
+
             # Get NO book
             no_book = self.http.get(
                 f"{self.clob_host}/book",
@@ -383,12 +466,12 @@ class PolymarketClient:
             ).json()
             
             if no_book.get("bids"):
-                market.no_bid = float(no_book["bids"][0]["price"])
-                market.no_bid_size = float(no_book["bids"][0]["size"])
+                market.no_bid = float(no_book["bids"][-1]["price"])
+                market.no_bid_size = float(no_book["bids"][-1]["size"])
             if no_book.get("asks"):
-                market.no_ask = float(no_book["asks"][0]["price"])
-                market.no_ask_size = float(no_book["asks"][0]["size"])
-                
+                market.no_ask = float(no_book["asks"][-1]["price"])
+                market.no_ask_size = float(no_book["asks"][-1]["size"])
+
         except Exception as e:
             print(f"[Warning] Failed to fetch order book: {e}")
     
@@ -478,6 +561,65 @@ class PolymarketClient:
         except Exception as e:
             print(f"[Warning] Scan strategy failed for {asset}: {e}")
             return None
+    
+    def discover_15m_market_by_slug(self, slug: str, asset: str = "BTC") -> Optional[PolymarketMarket]:
+        """
+        Discover a specific 15-minute market by its slug.
+        
+        Used for predictive discovery when you know the exact slug
+        (e.g., predicted from previous market's slug).
+        
+        Args:
+            slug: Market slug like 'btc-updown-15m-1762812000'
+            asset: Asset ticker (BTC, ETH, SOL, XRP)
+            
+        Returns:
+            PolymarketMarket if found, None otherwise
+        """
+        try:
+            resp = self.http.get(
+                f"{GAMMA_API}/events/slug/{slug}",
+                timeout=5
+            )
+            
+            if resp.status_code != 200:
+                return None
+            
+            return self._event_to_market(resp.json(), asset)
+            
+        except Exception as e:
+            print(f"[Debug] Slug lookup failed for {slug}: {e}")
+            return None
+    
+    def discover_current_and_next_15m_markets(self, asset: str = "BTC") -> Tuple[Optional[PolymarketMarket], Optional[str]]:
+        """
+        Smart discovery: Find CURRENT live market and predict NEXT market slug.
+        
+        This is the recommended method for initial market discovery:
+        1. Uses scan to find current live market
+        2. Extracts timestamp from current market's slug
+        3. Predicts next market's slug by adding 900 seconds
+        
+        Returns:
+            Tuple of (current_market, next_market_slug)
+            - current_market: The market that's live right now
+            - next_market_slug: Predicted slug for the next 15m market
+        
+        Example:
+            current, next_slug = client.discover_current_and_next_15m_markets("BTC")
+            # Trade current market...
+            # When it expires, use: next_market = client.discover_15m_market_by_slug(next_slug, "BTC")
+        """
+        # Find current live market using scan
+        current_market = self.discover_next_15m_market_scan(asset)
+        
+        if current_market is None or current_market.slug is None:
+            return None, None
+        
+        # Predict next market slug
+        next_slug = self._predict_next_market_slug(current_market.slug)
+        
+        return current_market, next_slug
 
     def _iter_markets_pages(self, next_cursor: str = "", closed: bool = False):
         """
@@ -527,42 +669,57 @@ class PolymarketClient:
     def get_crypto_15min_markets(
         self, 
         assets: List[str] = ["BTC", "ETH", "SOL", "XRP"],
-        max_markets_per_asset: int = 10
-    ) -> List[PolymarketMarket]:
+        max_markets_per_asset: int = 10,
+        return_next_slugs: bool = False
+    ) -> Union[List[PolymarketMarket], Tuple[List[PolymarketMarket], Dict[str, str]]]:
         """
         Fetch active 15-minute up/down markets for specific crypto assets.
         
-        NEW: Uses Gamma Events API with slug-based discovery (Strategy A + C).
-        First tries predictive strategy (fast), falls back to scan strategy.
-
+        Uses smart discovery strategy:
+        1. First call: Uses scan to find CURRENT live markets
+        2. Extracts slug and predicts NEXT market for seamless transition
+        3. Returns markets + next slugs for predictive discovery
+        
         Args:
             assets: List of crypto tickers to fetch (default: BTC, ETH, SOL, XRP)
             max_markets_per_asset: Maximum markets to return per asset (default: 10)
+            return_next_slugs: If True, also returns dict of {asset: next_slug}
 
+        Returns:
+            If return_next_slugs=False: List of PolymarketMarket
+            If return_next_slugs=True: (List of PolymarketMarket, Dict of next slugs)
+            
         Performance:
-            - Predictive: <1 second per asset (if market is live)
-            - Scan: 2-3 seconds per asset (if predictive fails)
+            - Initial scan: 2-3 seconds per asset (finds current market)
+            - Subsequent calls: <1 second per asset (use predicted slugs)
         """
         results: List[PolymarketMarket] = []
+        next_slugs: Dict[str, str] = {}
         
         for asset in assets:
-            # Strategy C: Try predictive discovery first (fast)
-            market = self.discover_next_15m_market_predictive(asset)
+            # Try current + next discovery (smart strategy)
+            current_market, next_slug = self.discover_current_and_next_15m_markets(asset)
             
-            # Strategy A: Fall back to scan if predictive failed
-            if market is None:
-                print(f"[{asset}] Predictive failed, scanning events...")
-                market = self.discover_next_15m_market_scan(asset)
-            
-            if market:
-                results.append(market)
-                expiry_str = self._format_expiry_time(market.expiry_time)
-                mins_left = market.minutes_to_expiry()
-                print(f"[{asset}] Found: {market.question}")
+            if current_market:
+                results.append(current_market)
+                if next_slug:
+                    next_slugs[asset] = next_slug
+                
+                expiry_str = self._format_expiry_time(current_market.expiry_time)
+                mins_left = current_market.minutes_to_expiry()
+                print(f"[{asset}] Found: {current_market.question}")
                 print(f"       Expires: {expiry_str} ({mins_left:.1f} min remaining)")
+                
+                if next_slug:
+                    next_ts = self._extract_timestamp_from_slug(next_slug)
+                    if next_ts:
+                        next_time_utc = datetime.fromtimestamp(next_ts, tz=timezone.utc).strftime("%H:%M UTC")
+                        print(f"       Next market: {next_slug} (opens at {next_time_utc})")
             else:
                 print(f"[{asset}] No active 15-minute market found")
         
+        if return_next_slugs:
+            return results, next_slugs
         return results
     
     def get_btc_15min_markets(self) -> List[PolymarketMarket]:

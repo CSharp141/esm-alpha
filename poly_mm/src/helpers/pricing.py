@@ -477,6 +477,10 @@ class PricingEngine:
         # Current state
         self.current_spot: Optional[float] = None
         self.current_volatility: Optional[VolatilityState] = None
+        
+        # Price tick buffer for precise strike price matching
+        # Store recent ticks: [(timestamp, price), ...]
+        self.price_buffer = deque(maxlen=1000)  # Keep last 1000 ticks
     
     def update_price(self, price: float, timestamp: float):
         """
@@ -487,9 +491,46 @@ class PricingEngine:
             timestamp: Unix timestamp
         """
         self.current_spot = price
+        
+        # Add to buffer for strike price matching
+        self.price_buffer.append((timestamp, price))
+        
         vol_state = self.vol_estimator.add_price(price, timestamp)
         if vol_state:
             self.current_volatility = vol_state
+    
+    def get_price_at_timestamp(self, target_timestamp: float, tolerance_seconds: float = 5.0) -> Optional[float]:
+        """
+        Get the price closest to a specific timestamp.
+        
+        Used for precise strike price capture at market start time.
+        Searches the price buffer for the tick closest to target_timestamp.
+        
+        Args:
+            target_timestamp: Target Unix timestamp (e.g., market start time)
+            tolerance_seconds: Maximum time difference to accept (default 5 seconds)
+            
+        Returns:
+            Price at closest timestamp, or None if no tick within tolerance
+        """
+        if not self.price_buffer:
+            return None
+        
+        # Find tick with minimum time difference
+        best_price = None
+        best_diff = float('inf')
+        
+        for tick_timestamp, price in self.price_buffer:
+            diff = abs(tick_timestamp - target_timestamp)
+            if diff < best_diff:
+                best_diff = diff
+                best_price = price
+        
+        # Only return if within tolerance
+        if best_diff <= tolerance_seconds:
+            return best_price
+        
+        return None
     
     def calculate_fair_value(
         self,

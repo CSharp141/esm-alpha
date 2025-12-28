@@ -6,6 +6,7 @@ Test the new 15-minute market discovery methods.
 import sys
 sys.path.insert(0, 'src')
 
+import time
 from helpers.polymarket import PolymarketClient
 from config import get_config
 
@@ -31,8 +32,11 @@ def test_market_discovery():
     
     for asset in assets:
         print(f"\n[{asset}] Testing predictive discovery...")
+        start_time = time.time()
         market = client.discover_next_15m_market_predictive(asset)
-        
+        end_time = time.time()
+        elapsed = end_time - start_time
+        print(f"  ⏱️  Discovery took {elapsed:.2f} seconds")
         if market:
             print(f"  ✅ Found: {market.question}")
             print(f"  📅 Expires: {market.minutes_to_expiry():.1f} minutes")
@@ -48,8 +52,12 @@ def test_market_discovery():
     
     for asset in assets:
         print(f"\n[{asset}] Testing scan discovery...")
+        start_time = time.time()
         market = client.discover_next_15m_market_scan(asset)
-        
+        end_time = time.time()
+        elapsed = end_time - start_time
+        print(f"  ⏱️  Discovery took {elapsed:.2f} seconds")
+
         if market:
             print(f"  ✅ Found: {market.question}")
             print(f"  📅 Expires: {market.minutes_to_expiry():.1f} minutes")

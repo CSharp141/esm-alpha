@@ -54,19 +54,6 @@ class PolymarketConfig:
 
 
 @dataclass
-class ChainlinkConfig:
-    """Chainlink/Ethereum configuration."""
-    rpc_url: str = "https://eth.llamarpc.com"
-    
-    @classmethod
-    def from_env(cls) -> "ChainlinkConfig":
-        """Load from environment variables."""
-        return cls(
-            rpc_url=os.getenv("ETH_RPC_URL", "https://eth.llamarpc.com")
-        )
-
-
-@dataclass
 class PricingConfig:
     """Pricing engine configuration."""
     lambda_param: float = 0.94
@@ -131,7 +118,7 @@ class SystemConfig:
     log_level: str = "INFO"
     enable_metrics: bool = True
     metrics_interval: int = 60
-    binance_ws_url: str = "wss://stream.binance.com:9443/ws"
+    rtds_ws_url: str = "wss://ws-live-data.polymarket.com"
     
     @classmethod
     def from_env(cls) -> "SystemConfig":
@@ -155,7 +142,7 @@ class SystemConfig:
             log_level=os.getenv("LOG_LEVEL", "INFO"),
             enable_metrics=enable_metrics,
             metrics_interval=int(os.getenv("METRICS_INTERVAL", "60")),
-            binance_ws_url=os.getenv("BINANCE_WS_URL", "wss://stream.binance.com:9443/ws")
+            rtds_ws_url=os.getenv("RTDS_WS_URL", "wss://ws-live-data.polymarket.com")
         )
 
 
@@ -163,7 +150,6 @@ class SystemConfig:
 class Config:
     """Complete application configuration."""
     polymarket: PolymarketConfig
-    chainlink: ChainlinkConfig
     pricing: PricingConfig
     trading: TradingConfig
     system: SystemConfig
@@ -178,7 +164,6 @@ class Config:
         """
         return cls(
             polymarket=PolymarketConfig.from_env(),
-            chainlink=ChainlinkConfig.from_env(),
             pricing=PricingConfig.from_env(),
             trading=TradingConfig.from_env(),
             system=SystemConfig.from_env()
